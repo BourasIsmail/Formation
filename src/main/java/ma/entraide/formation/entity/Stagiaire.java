@@ -20,6 +20,8 @@ public class Stagiaire {
 
     private String adresse;
 
+    private String dateNaissance;
+
     private String situationFamilial;
 
     private String cin;
@@ -55,15 +57,15 @@ public class Stagiaire {
     private String dateFin3;
 
     @ManyToOne(cascade = CascadeType.DETACH)
-    @JoinColumn(name = "province_id")
+    @JoinColumn(name = "province1_id")
     private Province province1;
 
     @ManyToOne(cascade = CascadeType.DETACH)
-    @JoinColumn(name = "province_id")
+    @JoinColumn(name = "province2_id")
     private Province province2;
 
     @ManyToOne(cascade = CascadeType.DETACH)
-    @JoinColumn(name = "province_id")
+    @JoinColumn(name = "province3_id")
     private Province province3;
 
     @Lob

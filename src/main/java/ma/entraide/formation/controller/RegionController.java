@@ -3,6 +3,7 @@ package ma.entraide.formation.controller;
 
 import ma.entraide.formation.entity.Region;
 import ma.entraide.formation.service.RegionService;
+import ma.entraide.formation.service.StagiaireService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -19,6 +20,8 @@ import java.util.List;
 public class RegionController {
     @Autowired
     private RegionService regionService;
+    @Autowired
+    private StagiaireService stagiaireService;
 
     @GetMapping("/all")
     public ResponseEntity<List<Region>> getAllRegions() {
@@ -76,5 +79,7 @@ public class RegionController {
             return ResponseEntity.badRequest().build();
         }
     }
+
+
 
 }
