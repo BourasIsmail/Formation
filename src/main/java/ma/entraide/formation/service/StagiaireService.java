@@ -136,9 +136,13 @@ public class StagiaireService {
     }
 
     public String deleteStagiaire(Long id) {
-        Stagiaire stagiaire = getStagiaireById(id);
-        stagiaireRepo.delete(stagiaire);
-        return "Stagiaire deleted";
+        try {
+            stagiaireRepo.deleteById(id);
+            return "Stagiaire deleted";
+        }catch (Exception e){
+            throw new ResourceNotFoundException("Not deleted");
+        }
+
     }
 
 }

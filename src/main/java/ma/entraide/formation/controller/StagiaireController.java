@@ -1,6 +1,7 @@
 package ma.entraide.formation.controller;
 
 import ma.entraide.formation.entity.Stagiaire;
+import ma.entraide.formation.exceptions.ErrorResponse;
 import ma.entraide.formation.service.StagiaireService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ByteArrayResource;
@@ -10,6 +11,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -47,7 +49,7 @@ public class StagiaireController {
     @GetMapping("/{id}")
     public ResponseEntity<Stagiaire> getStagiaire(@PathVariable Long id) {
         try {
-            Stagiaire stagiaire =stagiaireService.getStagiaireById(id);
+            Stagiaire stagiaire = stagiaireService.getStagiaireById(id);
             return ResponseEntity.ok(stagiaire);
         }catch (Exception e) {
             return ResponseEntity.notFound().build();
@@ -94,13 +96,14 @@ public class StagiaireController {
         }
     }
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<String> deleteStagiaire(@PathVariable Long id) {
+    @DeleteMapping("/delete/{id}")
+    public ResponseEntity<?> deleteStagiaire(@PathVariable Long id) {
         try {
             String result = stagiaireService.deleteStagiaire(id);
             return ResponseEntity.ok(result);
         }catch (Exception e) {
-            return ResponseEntity.notFound().build();
+            String errorMessage = "An error occurred while adding stagiaire: " + e.getMessage();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ErrorResponse(errorMessage));
         }
     }
 
