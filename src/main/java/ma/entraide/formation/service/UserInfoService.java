@@ -1,6 +1,7 @@
 package ma.entraide.formation.service;
 
 
+import ma.entraide.formation.entity.Province;
 import ma.entraide.formation.entity.UserInfo;
 import ma.entraide.formation.repository.UserInfoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +21,8 @@ public class UserInfoService implements UserDetailsService {
     private UserInfoRepository userInfoRepository;
     @Autowired
     private PasswordEncoder passwordEncoder;
+    @Autowired
+    private ProvinceService provinceService;
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         Optional<UserInfo> userInfo = userInfoRepository.findByEmail(username);
@@ -53,7 +56,7 @@ public class UserInfoService implements UserDetailsService {
     }
 
     public UserInfo findUserByUsername(String email) throws UsernameNotFoundException {
-        Optional<UserInfo> userInfoOp = userInfoRepository.findByName(email);
+        Optional<UserInfo> userInfoOp = userInfoRepository.findByEmail(email);
         UserInfo userInfo = null;
         if(userInfoOp.isPresent()){
             userInfo = userInfoOp.get();
@@ -90,7 +93,7 @@ public class UserInfoService implements UserDetailsService {
     }
 
     public String updateUser(Integer id,UserInfo updatedUserInfo){
-
+            Province province = provinceService.getProvinceById(updatedUserInfo.getProvince().getId());
             Optional<UserInfo> optionalUserInfo = userInfoRepository.findById(id);
             if (!optionalUserInfo.isPresent()) {
                 throw new ResourceNotFoundException("User not found");
@@ -105,16 +108,13 @@ public class UserInfoService implements UserDetailsService {
                 existingUser.setName(updatedUserInfo.getName());
                 existingUser.setEmail(updatedUserInfo.getEmail());
                 existingUser.setRoles(updatedUserInfo.getRoles());
+                existingUser.setProvince(province);
                 existingUser.setPassword(passwordEncoder.encode(updatedUserInfo.getPassword())); // Update password
 
                 // Save the updated user
                 userInfoRepository.save(existingUser);
                 return "User updated successfully";
             }
-
-
-
-
 
 
 }

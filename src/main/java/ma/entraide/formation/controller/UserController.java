@@ -59,14 +59,12 @@ public class UserController {
     }
 
     @GetMapping("/getUsers")
-    @PreAuthorize("hasAuthority('ADMIN_ROLES')")
     public ResponseEntity<List<UserInfo>> getAllUsers() {
         List<UserInfo> users = userInfoService.getAllUser();
         return new ResponseEntity<>(users, HttpStatus.OK);
     }
 
     @GetMapping("/getUser/{id}")
-    @PreAuthorize("hasAuthority('USER_ROLES') or hasAuthority('ADMIN_ROLES')")
     public ResponseEntity<?> getAllUsers(@PathVariable Integer id) {
         try {
             UserInfo user = userInfoService.getUserById(id);
@@ -92,7 +90,6 @@ public class UserController {
     }
 
     @PutMapping("/updateUser/{id}")
-    @PreAuthorize("hasAuthority('ADMIN_ROLES') OR hasAuthority('USER_ROLES')")
     public ResponseEntity<?> updateUser(@PathVariable("id") Integer id, @RequestBody UserInfo userInfo){
         try {
             userInfoService.updateUser(id, userInfo);
@@ -100,6 +97,16 @@ public class UserController {
         }
         catch(Exception e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @GetMapping("/email/{email}")
+    public ResponseEntity<?> findCurrentUser(@PathVariable String email) {
+        try {
+            UserInfo user = userInfoService.findUserByUsername(email);
+            return new ResponseEntity<>(user, HttpStatus.OK);
+        }catch (Exception e){
+            throw new UsernameNotFoundException("Invalid email address");
         }
     }
 

@@ -57,9 +57,9 @@ public class StagiaireController {
     }
 
     @PostMapping("/addStagiaire")
-    public ResponseEntity<String> addStagiaire(@RequestBody Stagiaire stagiaire) {
+    public ResponseEntity<Stagiaire> addStagiaire(@RequestBody Stagiaire stagiaire) {
         try {
-            String result = stagiaireService.addStagiaire(stagiaire);
+            Stagiaire result = stagiaireService.addStagiaire(stagiaire);
             return ResponseEntity.ok(result);
         }catch (Exception e) {
             return ResponseEntity.notFound().build();
@@ -107,15 +107,7 @@ public class StagiaireController {
         }
     }
 
-    @GetMapping("/downloadAssurance/{id}")
-    public ResponseEntity<Resource> downloadFileAssurance(@PathVariable Long id) {
-        Stagiaire stagiaire = null;
-        stagiaire = stagiaireService.getStagiaireById(id);
-        return ResponseEntity.ok()
-                .contentType(MediaType.parseMediaType(stagiaire.getFileTypeAssurance()))
-                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + stagiaire.getFileNameAssurance() + "\"")
-                .body(new ByteArrayResource(stagiaire.getAttestationAssurance()));
-    }
+
 
     @GetMapping("/downloadDemande/{id}")
     public ResponseEntity<Resource> downloadFileDemande(@PathVariable Long id) {
@@ -128,10 +120,25 @@ public class StagiaireController {
     }
 
     @PutMapping(value = "/upload/{id}", consumes = {MULTIPART_FORM_DATA_VALUE})
-    public String uploadFile(@PathVariable Long id,@RequestParam("file1") MultipartFile file1,
-                             @RequestParam("file2") MultipartFile file2) {
-        Stagiaire stagiaire = stagiaireService.uploadFileDemande(id, file1);
-        stagiaire = stagiaireService.uploadFileAssurance(id, file2);
+    public String uploadFile(@PathVariable Long id,
+                             @RequestParam(required = false) MultipartFile file) {
+        if (file != null) {
+            stagiaireService.uploadFileDemande(id, file);
         return "uploaded";
+        }else {
+            return "error";
+        }
     }
+
+    @PutMapping(value = "/uploadDemande/{id}", consumes = {MULTIPART_FORM_DATA_VALUE})
+    public String uploadFileDemande(@PathVariable Long id, @RequestParam MultipartFile file) {
+        if (file != null) {
+            stagiaireService.uploadFileDemande(id, file);
+            return "uploaded";
+        }else {
+            return "error";
+        }
+    }
+
+
 }

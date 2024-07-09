@@ -41,47 +41,34 @@ public class StagiaireService {
         return stagiaireRepo.findAll(pageable);
     }
 
-    public String addStagiaire(Stagiaire stagiaire) {
+    public Stagiaire addStagiaire(Stagiaire stagiaire) {
         Province province1 = provinceService.getProvinceById(stagiaire.getProvince1().getId());
         Province province2 = provinceService.getProvinceById(stagiaire.getProvince2().getId());
         Province province3 = provinceService.getProvinceById(stagiaire.getProvince3().getId());
         stagiaire.setProvince1(province1);
         stagiaire.setProvince2(province2);
         stagiaire.setProvince3(province3);
-        stagiaireRepo.save(stagiaire);
-        return "Stagiaire added";
+        return stagiaireRepo.save(stagiaire);
+
     }
 
     public String updateStagiairePersonel(Long id,Stagiaire stagiaire) {
         Stagiaire newStagiaire = getStagiaireById(id);
-        newStagiaire.setNom(stagiaire.getNom());
-        newStagiaire.setPrenom(stagiaire.getPrenom());
+        newStagiaire.setNomAr(stagiaire.getNomAr());
+        newStagiaire.setPrenomAr(stagiaire.getPrenomAr());
+        newStagiaire.setNomFr(stagiaire.getNomFr());
+        newStagiaire.setPrenomFr(stagiaire.getPrenomFr());
+        newStagiaire.setSexe(stagiaire.getSexe());
         newStagiaire.setEmail(stagiaire.getEmail());
         newStagiaire.setAdresse(stagiaire.getAdresse());
         newStagiaire.setDateNaissance(stagiaire.getDateNaissance());
         newStagiaire.setSituationFamilial(stagiaire.getSituationFamilial());
         newStagiaire.setCin(stagiaire.getCin());
+        newStagiaire.setTelephone(stagiaire.getTelephone());
         stagiaireRepo.save(newStagiaire);
         return "Stagiaire updated";
     }
 
-
-    public Stagiaire uploadFileAssurance(Long id , MultipartFile file){
-        String fileName = StringUtils.cleanPath(file.getOriginalFilename());
-        try{
-            if(fileName.contains("..")){
-                throw new Exception("Filemane contains invalid path sequence"
-                        + fileName);
-            }
-            Stagiaire stagiaire = getStagiaireById(id);
-            stagiaire.setFileNameAssurance(fileName);
-            stagiaire.setFileTypeAssurance(file.getContentType());
-            stagiaire.setAttestationAssurance(file.getBytes());
-            return stagiaireRepo.save(stagiaire);
-        }catch (Exception e){
-            throw new ResourceNotFoundException("File not uploaded"+fileName);
-        }
-    }
 
     public Stagiaire uploadFileDemande(Long id , MultipartFile file){
         String fileName = StringUtils.cleanPath(file.getOriginalFilename());
@@ -104,9 +91,8 @@ public class StagiaireService {
         Stagiaire newStagiaire = getStagiaireById(id);
         try{
             newStagiaire.setNomUniversite(stagiaire.getNomUniversite());
-            newStagiaire.setAdresseUniversite(stagiaire.getAdresseUniversite());
+            newStagiaire.setNiveauEtude(stagiaire.getNiveauEtude());
             newStagiaire.setSpecialite(stagiaire.getSpecialite());
-            newStagiaire.setAssurance(stagiaire.isAssurance());
 
             return stagiaireRepo.save(newStagiaire);
         }catch (Exception e){
@@ -120,6 +106,7 @@ public class StagiaireService {
             Province province1 = provinceService.getProvinceById(stagiaire.getProvince1().getId());
             Province province2 = provinceService.getProvinceById(stagiaire.getProvince2().getId());
             Province province3 = provinceService.getProvinceById(stagiaire.getProvince3().getId());
+            newStagiaire.setDureeStage(stagiaire.getDureeStage());
             newStagiaire.setDateDebut1(stagiaire.getDateDebut1());
             newStagiaire.setDateFin1(stagiaire.getDateFin1());
             newStagiaire.setDateDebut2(stagiaire.getDateDebut2());

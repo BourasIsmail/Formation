@@ -12,11 +12,19 @@ import lombok.NoArgsConstructor;
 public class Stagiaire {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "stagiaire_id")
     private Long id;
 
-    private String nom;
+    //Personnel
+    private String nomAr;
 
-    private String prenom;
+    private String prenomAr;
+
+    private String nomFr;
+
+    private String prenomFr;
+
+    private String sexe;
 
     private String adresse;
 
@@ -24,25 +32,22 @@ public class Stagiaire {
 
     private String situationFamilial;
 
+    @Column(unique = true)
     private String cin;
 
     private String email;
 
+    private String telephone;
+
+    //Academic
     private String nomUniversite;
 
-    private String adresseUniversite;
+    private String niveauEtude;
 
     private String specialite;
 
-    private boolean assurance;
-
-    @Lob
-    @Column(columnDefinition = "longblob")
-    private byte[] attestationAssurance;
-
-    private String fileNameAssurance;
-
-    private String fileTypeAssurance;
+    //Formation
+    private int dureeStage;
 
     private String dateDebut1;
 

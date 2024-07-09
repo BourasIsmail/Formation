@@ -34,7 +34,14 @@ public class UserInfo {
 
     @ManyToOne(cascade = CascadeType.DETACH)
     @JoinColumn(name = "province_id")
-    private Region province;
+    private Province province;
+
+    public UserInfo(String name, String email, String roles, String password) {
+        this.name = name;
+        this.email = email;
+        this.roles = roles;
+        this.password = password;
+    }
 
 
 
