@@ -35,8 +35,8 @@ public class FormationApplication {
         return args ->{
             logger.info("Running Spring Security Application ...");
 
-			UserInfo admin2 = new UserInfo("ADMIN1","admin1@gmailcom","ADMIN_ROLES","Entraide57");
-			userInfoService.addUser(admin2);
+			//UserInfo admin2 = new UserInfo("ADMIN1","admin1@gmailcom","ADMIN_ROLES","Entraide57");
+			//userInfoService.addUser(admin2);
 
 
             logger.info("end");
